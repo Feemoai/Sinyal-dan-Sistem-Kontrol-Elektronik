@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Monitor Penetas Telur</title>
+    <style>
+        :root {
+            --o: #ff7a1a;
+            --b: #4da3ff;
+            --g: #2ecc9a;
+            --r: #ff4d6d;
+            --m: #8f98b3
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font: 14px system-ui, sans-serif;
+            color: #eef1fa;
+            min-height: 100vh;
+            display: flex;
+            background: radial-gradient(circle at 85% 0, #4a220a 0, transparent 45%), radial-gradient(circle at 0 100%, #102a70 0, transparent 50%), #080b16;
+            background-attachment: fixed
+        }
+
+        nav {
+            width: 215px;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-right: 1px solid rgba(255, 255, 255, .08);
+            flex-shrink: 0
+        }
+
+        .br {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px
+        }
+
+        .br b {
+            display: block
+        }
+
+        .br small,
+        .m {
+            color: var(--m);
+            font-size: 12px
+        }
+
+        nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #cfd5ea;
+            text-decoration: none
+        }
+
+        nav a.on {
+            background: rgba(255, 122, 26, .16);
+            color: #fff;
+            box-shadow: inset 0 0 0 1px rgba(255, 122, 26, .4)
+        }
+
+        main {
+            flex: 1;
+            padding: 20px 24px;
+            min-width: 0
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px
+        }
+
+        .top p {
+            margin: 4px 0 0;
+            color: var(--m)
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 18px;
+            padding: 16px;
+            backdrop-filter: blur(14px);
+            margin-bottom: 14px
+        }
+
+        .card h3 {
+            margin: 0 0 4px;
+            font-size: 14px
+        }
+
+        .g4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px
+        }
+
+        .g4 .card {
+            margin: 0
+        }
+
+        .k small {
+            color: var(--m);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase
+        }
+
+        .k b {
+            display: block;
+            font-size: 30px;
+            margin: 6px 0 2px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .dg {
+            display: grid;
+            grid-template-columns: 270px 1fr;
+            gap: 14px
+        }
+
+        .two {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 14px
+        }
+
+        .page {
+            display: none
+        }
+
+        .page.on {
+            display: block
+        }
+
+        input,
+        select,
+        button {
+            font: inherit;
+            color: #fff;
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 10px;
+            padding: 8px 12px
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        button.on,
+        [data-m].on {
+            background: var(--o);
+            border-color: var(--o);
+            color: #1a0d02;
+            font-weight: 600
+        }
+
+        input[type=range] {
+            width: 100%;
+            padding: 0;
+            accent-color: var(--o)
+        }
+
+        input[type=number] {
+            width: 100px
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 8px 0
+        }
+
+        .bar {
+            height: 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, .1);
+            overflow: hidden
+        }
+
+        .bar i {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--o), var(--r));
+            width: 0
+        }
+
+        .bd {
+            float: right;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 99px;
+            background: rgba(46, 204, 154, .18);
+            color: var(--g)
+        }
+
+        canvas {
+            width: 100%;
+            height: 150px;
+            display: block
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: linear-gradient(120deg, rgba(255, 122, 26, .18), rgba(77, 163, 255, .1))
+        }
+
+        .hero svg {
+            width: 250px;
+            flex-shrink: 0
+        }
+
+        .hero h2 {
+            margin: 2px 0 12px;
+            font-size: 28px;
+            line-height: 1.15
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 99px;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid rgba(255, 255, 255, .14);
+            margin: 0 8px 6px 0
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        td {
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .07)
+        }
+
+        td:last-child {
+            text-align: right;
+            font-weight: 600
+        }
+
+        .mc {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 8px;
+            padding: 12px
+        }
+
+        .mc small {
+            display: block;
+            color: var(--m);
+            font-weight: 400;
+            margin-top: 3px
+        }
+
+        .mc.on small {
+            color: #4a2a0a
+        }
+
+        li {
+            margin: 5px 0;
+            color: #cfd5ea
+        }
+
+        ul {
+            padding-left: 18px;
+            margin: 8px 0
+        }
+
+        .lg span {
+            margin-right: 14px;
+            font-size: 12px;
+            color: var(--m)
+        }
+
+        .lg i {
+            display: inline-block;
+            width: 14px;
+            height: 4px;
+            margin-right: 5px;
+            vertical-align: middle
+        }
+
+        .eg {
+            float: right;
+            width: 70px
+        }
+
+        .glow {
+            filter: drop-shadow(0 0 8px var(--o))
+        }
+
+        .hv2 {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: linear-gradient(120deg, rgba(255, 193, 7, .1), rgba(77, 163, 255, .08))
+        }
+
+        .hvw {
+            position: relative;
+            width: 240px;
+            flex-shrink: 0
+        }
+
+        .hv {
+            cursor: pointer;
+            transform-origin: 50% 92%
+        }
+
+        .hv svg {
+            width: 100%;
+            display: block;
+            filter: drop-shadow(0 8px 18px rgba(255, 122, 26, .35))
+        }
+
+        .rock {
+            animation: rk 2.4s ease-in-out infinite
+        }
+
+        @keyframes rk {
+
+            0%,
+            100% {
+                transform: rotate(-2deg)
+            }
+
+            50% {
+                transform: rotate(2deg)
+            }
+        }
+
+        .wig {
+            animation: wg .6s
+        }
+
+        @keyframes wg {
+
+            0%,
+            100% {
+                transform: rotate(0)
+            }
+
+            20% {
+                transform: rotate(-9deg)
+            }
+
+            40% {
+                transform: rotate(8deg)
+            }
+
+            60% {
+                transform: rotate(-5deg)
+            }
+
+            80% {
+                transform: rotate(3deg)
+            }
+        }
+
+        .bob {
+            animation: bb 1.2s ease-in-out infinite
+        }
+
+        @keyframes bb {
+            50% {
+                transform: translateY(-4px)
+            }
+        }
+
+        .tw {
+            animation: tw 1.5s infinite
+        }
+
+        @keyframes tw {
+            50% {
+                opacity: .2
+            }
+        }
+
+        .bl {
+            animation: bk 3.5s infinite;
+            transform-box: fill-box;
+            transform-origin: center
+        }
+
+        @keyframes bk {
+
+            0%,
+            92%,
+            100% {
+                transform: scaleY(1)
+            }
+
+            96% {
+                transform: scaleY(.1)
+            }
+        }
+
+        .bub {
+            position: absolute;
+            top: 0;
+            right: -6px;
+            background: #fff;
+            color: #222;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            opacity: 0;
+            transition: .3s
+        }
+
+        #tl {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        #tl button {
+            width: 30px;
+            padding: 5px 0;
+            font-size: 11px;
+            position: relative
+        }
+
+        #tl button.sel {
+            outline: 2px solid #fff
+        }
+
+        #tl button.c::after {
+            content: 'C';
+            position: absolute;
+            top: -7px;
+            right: -2px;
+            font-size: 9px;
+            color: #ffd23f
+        }
+
+        @media(max-width:900px) {
+            body {
+                flex-direction: column
+            }
+
+            nav {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap
+            }
+
+            .dg,
+            .two {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <radialGradient id="shl" cx=".35" cy=".3" r=".8">
+                <stop offset="0" stop-color="#fff6e5" />
+                <stop offset="1" stop-color="#ecc98d" />
+            </radialGradient>
+            <radialGradient id="cdl" cx=".5" cy=".55" r=".7">
+                <stop offset="0" stop-color="#fff3b0" />
+                <stop offset="1" stop-color="#ff9a3c" />
+            </radialGradient>
+        </defs>
+    </svg>
+    <nav>
+        <div class="br"><svg width="34" viewBox="0 0 100 120">
+                <path d="M50 8C28 8 14 50 14 76c0 24 16 38 36 38s36-14 36-38C86 50 72 8 50 8z" fill="#ff9a3c" />
+            </svg>
+            <div><b>Penetas Telur</b><small>Kontrol suhu PWM, DAC, ADC</small></div>
+        </div>
+        <a href="#dashboard">🥚 Dashboard</a><a href="#suhu">⚙️ Setting Suhu</a><a href="#ai">🧠 AI Suhu Telur</a><a
+            href="#simulasi">📈 Simulasi PWM, DAC, ADC</a>
+        <div class="card" style="margin-top:auto"><b>● Simulasi berjalan</b>
+            <div class="m" id="sn" style="margin-top:6px">-</div>
+            <div class="m" id="ip" style="margin-top:8px">-</div>
+        </div>
+    </nav>
+    <main>
+        <div class="top">
+            <div>
+                <h1 id="ttl"></h1>
+                <p id="sub"></p>
+            </div>
+            <div class="row"><span class="m">Kecepatan hari</span><select id="spd">
+                    <option value="86400">Waktu nyata</option>
+                    <option value="3600">1 jam / hari</option>
+                    <option value="600">10 menit / hari</option>
+                    <option value="60">1 menit / hari</option>
+                    <option value="10">10 detik / hari</option>
+                </select><button id="pz">Jeda</button></div>
+        </div>
+
+        <section class="page" id="dashboard">
+            <div class="card hero">
+                <svg viewBox="0 0 240 150">
+                    <defs>
+                        <radialGradient id="hg">
+                            <stop offset="0" stop-color="#ff7a1a" stop-opacity=".9" />
+                            <stop offset="1" stop-color="#ff7a1a" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <rect x="20" y="16" width="170" height="120" rx="20" fill="#141a2c" stroke="#ff8a3d"
+                        stroke-width="2" />
+                    <rect x="32" y="28" width="146" height="76" rx="12" fill="#1d2640" stroke="#33405f" />
+                    <ellipse id="hgl" cx="105" cy="106" rx="72" ry="24" fill="url(#hg)" opacity="0" />
+                    <g fill="#f6e7cf">
+                        <ellipse cx="52" cy="86" rx="10" ry="13" />
+                        <ellipse cx="76" cy="86" rx="10" ry="13" />
+                        <ellipse cx="100" cy="86" rx="10" ry="13" />
+                        <ellipse cx="124" cy="86" rx="10" ry="13" />
+                        <ellipse cx="148" cy="86" rx="10" ry="13" />
+                    </g>
+                    <path d="M44 112q5-9 10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0t10 0" fill="none"
+                        stroke="#ff7a1a" stroke-width="3" />
+                    <circle cx="170" cy="40" r="3" fill="#2ecc9a" />
+                    <rect x="206" y="24" width="12" height="90" rx="6" fill="#222a44" />
+                    <rect x="209" y="64" width="6" height="50" rx="3" fill="#ff4d6d" />
+                    <circle cx="212" cy="122" r="12" fill="#ff4d6d" />
+                </svg>
+                <div>
+                    <div class="m" id="gr"></div>
+                    <h2>Penetas Telur<br>Operations Center</h2><span class="chip" id="c1">-</span><span class="chip"
+                        id="c2">-</span><span class="chip" id="c3">-</span>
+                </div>
+            </div>
+            <div class="card hv2">
+                <div class="hvw">
+                    <div id="hv" class="hv" title="Ketuk telurnya!"></div>
+                    <div class="bub" id="bub"></div>
+                </div>
+                <div style="flex:1;min-width:260px">
+                    <div class="m" id="sg3">-</div>
+                    <h2 style="margin:4px 0;font-size:24px" id="sg1">-</h2>
+                    <div class="m" id="sg2" style="margin-bottom:10px">-</div>
+                    <div class="row"><span class="m">Pratinjau hari</span><input type="range" id="pvd" min="0" max="21"
+                            step="0.05" style="flex:1;min-width:140px"><button id="cdl">🔦 Candling</button><button
+                            id="pvb" style="display:none">Kembali ke sekarang</button></div>
+                    <div id="tl"></div>
+                    <div class="m" style="margin-top:6px">Ketuk telurnya, geser slider, atau klik angka hari untuk
+                        melihat perkembangan embrio.</div>
+                </div>
+            </div>
+            <div class="dg">
+                <div>
+                    <div class="card" style="text-align:center">
+                        <div class="eg" id="eg1"></div>
+                        <svg id="dial" viewBox="0 0 220 220" width="190">
+                            <circle cx="110" cy="110" r="88" fill="none" stroke="rgba(255,255,255,.08)"
+                                stroke-width="10" />
+                            <circle id="arc" cx="110" cy="110" r="88" fill="none" stroke="#ff7a1a" stroke-width="10"
+                                stroke-linecap="round" transform="rotate(-90 110 110)" stroke-dasharray="0 553" />
+                            <g id="tk"></g><text x="110" y="92" text-anchor="middle" fill="#8f98b3" font-size="11">HARI
+                                KE</text><text id="dn" x="110" y="135" text-anchor="middle" fill="#fff" font-size="52"
+                                font-weight="700">1</text><text x="110" y="158" text-anchor="middle" fill="#8f98b3"
+                                font-size="12">dari 21</text>
+                        </svg>
+                        <b id="fz"></b>
+                        <table style="margin-top:8px;text-align:left">
+                            <tr>
+                                <td class="m">Sudah di dalam alat</td>
+                                <td id="in1">-</td>
+                            </tr>
+                            <tr>
+                                <td class="m">Perkiraan menetas</td>
+                                <td id="in2">-</td>
+                            </tr>
+                        </table>
+                        <div class="m" style="text-align:left;margin-top:8px">Lompat ke hari (untuk demo)</div><input
+                            type="range" id="jmp" min="1" max="21" value="1">
+                        <button id="nb" style="width:100%;margin-top:10px">Mulai batch baru</button>
+                    </div>
+                    <div class="card">
+                        <h3>Hari ini</h3>
+                        <table>
+                            <tr>
+                                <td class="m">Target suhu</td>
+                                <td id="h1">-</td>
+                            </tr>
+                            <tr>
+                                <td class="m">Target kelembapan</td>
+                                <td id="h2">-</td>
+                            </tr>
+                            <tr>
+                                <td class="m">Balik telur</td>
+                                <td id="h3">-</td>
+                            </tr>
+                            <tr>
+                                <td class="m">Catatan</td>
+                                <td id="h4">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <div class="g4" style="margin-bottom:14px">
+                        <div class="card k"><small>Suhu telur</small><span class="bd" id="bd">Normal</span><b
+                                id="vt">-</b><span class="m" id="vt2">-</span></div>
+                        <div class="card k"><small>Setpoint</small><b id="vs">-</b><span class="m" id="vs2">-</span>
+                        </div>
+                        <div class="card k"><small>PWM pemanas</small><b id="vp">-</b>
+                            <div class="bar"><i id="pb"></i></div><span class="m" id="vp2">-</span>
+                        </div>
+                        <div class="card k"><small>Kelembapan target</small><b id="vh">-</b><span class="m">Perkiraan
+                                profil (tidak ada sensor)</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="row" style="justify-content:space-between">
+                            <div>
+                                <h3>Suhu dan PWM langsung</h3><span class="m">300 detik terakhir waktu asli</span>
+                            </div>
+                            <div class="row"><button data-m="AI_AUTO">AI otomatis</button><button
+                                    data-m="PID_MANUAL">PID manual</button><button data-m="PWM_MANUAL">PWM
+                                    manual</button></div>
+                        </div>
+                        <div class="lg"><span><i style="background:#4da3ff"></i>Suhu telur (ADC)</span><span><i
+                                    style="background:#ff7a1a"></i>Setpoint</span><span><i
+                                    style="background:#ff4d6d"></i>PWM pemanas</span></div>
+                        <div class="m">Suhu (°C)</div><canvas id="c1c"></canvas>
+                        <div class="m">PWM (%)</div><canvas id="c2c" style="height:90px"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Catatan kejadian</h3><span class="m">Waktu mengikuti jam inkubasi</span>
+                        <table id="lg" style="margin-top:8px"></table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page" id="suhu">
+            <div class="two">
+                <div>
+                    <div class="card">
+                        <h3>Mode kontrol</h3><span class="m">Pilih siapa yang menentukan suhu dan PWM</span>
+                        <div style="margin-top:10px">
+                            <button class="mc" data-m="AI_AUTO">AI otomatis<small>Target suhu mengikuti umur telur hari
+                                    ke-1 sampai 21, lengkap dengan pengaturan gain dan deteksi pintu
+                                    terbuka.</small></button>
+                            <button class="mc" data-m="PID_MANUAL">PID manual<small>Anda menentukan target suhu, PID
+                                    mengatur PWM sendiri.</small></button>
+                            <button class="mc" data-m="PWM_MANUAL">PWM manual<small>Tanpa umpan balik. Anda menentukan
+                                    duty PWM, suhu menyesuaikan. Proteksi suhu bahaya tetap aktif.</small></button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Batas alarm</h3><span class="m">Alarm tampil di dashboard. Pemanas dimatikan paksa saat
+                            melewati batas proteksi.</span>
+                        <div class="row"><label class="m">Alarm rendah<br><input type="number" id="al"
+                                    step="0.1"></label><label class="m">Alarm tinggi<br><input type="number" id="ah"
+                                    step="0.1"></label><label class="m">Proteksi<br><input type="number" id="pr"
+                                    step="0.1"></label></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <h3>Target suhu manual</h3><span class="m">Dipakai pada mode PID manual</span>
+                        <div class="row"><button id="smn">−</button><input type="number" id="sp" step="0.1" min="30"
+                                max="42"><span>°C</span><button id="spl">+</button></div>
+                        <div class="row"><button class="pre" data-v="37.8">Ayam 37.8</button><button class="pre"
+                                data-v="37.5">Bebek 37.5</button><button class="pre" data-v="37.7">Puyuh 37.7</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>PWM manual</h3><span class="m">Dipakai pada mode PWM manual</span>
+                        <div class="row" style="justify-content:space-between"><span>Duty PWM</span><b id="pwv">0%</b>
+                        </div><input type="range" id="pw" min="0" max="100">
+                        <div class="m">PWM tinggi memanaskan ruang telur, PWM rendah membiarkannya mendingin.</div>
+                    </div>
+                    <div class="card">
+                        <div class="row" style="justify-content:space-between">
+                            <div>
+                                <h3>Parameter PID</h3><span class="m">Dipakai pada mode PID dan AI</span>
+                            </div><button id="rst">Kembalikan</button>
+                        </div>
+                        <div class="row"><label class="m">Kp<br><input type="number" id="kp" step="0.1"></label><label
+                                class="m">Ki<br><input type="number" id="ki" step="0.01"></label><label
+                                class="m">Kd<br><input type="number" id="kd" step="0.1"></label></div><span class="m">%
+                            per °C · % per °C·detik · % per °C/detik</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page" id="ai">
+            <div class="two">
+                <div class="card">
+                    <div class="eg glow" id="eg2" style="width:90px"></div>
+                    <h3>Keputusan AI sekarang</h3><span class="m">Dihitung dari umur telur, suhu ruang, dan suhu
+                        terbaca.</span><span class="bd" id="ab" style="float:none;margin-left:8px">AI sedang
+                        mengontrol</span>
+                    <table style="margin-top:10px">
+                        <tr>
+                            <td class="m">Umur telur</td>
+                            <td id="ad">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Target suhu</td>
+                            <td id="at">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Target kelembapan</td>
+                            <td id="ah2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Panas embrio (koreksi)</td>
+                            <td id="ae">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Feed-forward PWM</td>
+                            <td id="af">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Faktor gain Kp</td>
+                            <td id="ak">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Pintu</td>
+                            <td id="adr">-</td>
+                        </tr>
+                    </table>
+                    <ul>
+                        <li><b>Profil umur:</b> target suhu turun bertahap dari 37.8 °C ke 37.0 °C, kelembapan naik ke
+                            70% pada 3 hari terakhir.</li>
+                        <li><b>Panas embrio:</b> setelah hari ke-10 embrio menghasilkan panas sendiri, jadi PWM pelan
+                            diturunkan lebih dulu.</li>
+                        <li><b>Gain adaptif:</b> jauh dari target Kp dibuat lebih tinggi, dekat target kembali normal.
+                        </li>
+                        <li><b>Pintu terbuka:</b> suhu turun cepat memicu tambahan PWM sementara.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Profil suhu dan kelembapan 21 hari</h3><span class="m">Garis putus-putus = posisi sekarang. Zona
+                        akhir = fase tetas.</span>
+                    <div class="m" style="margin-top:8px">Suhu (°C)</div><canvas id="a1" style="height:190px"></canvas>
+                    <div class="m">Kelembapan (%)</div><canvas id="a2" style="height:190px"></canvas>
+                    <div class="m" style="text-align:center">hari berjalan (0 sampai 21)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page" id="simulasi">
+            <div class="g4" style="margin-bottom:14px">
+                <div class="card k"><small>Setpoint</small><b id="x1">-</b><span class="m" id="x1b">-</span></div>
+                <div class="card k"><small>Pengendali PID</small>
+                    <table style="font-size:12px">
+                        <tr>
+                            <td class="m">Error</td>
+                            <td id="xe">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">P / I / D</td>
+                            <td id="xp">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Keluaran</td>
+                            <td id="xo">-</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card k"><small>Keluaran PWM</small><b id="xw">-</b><svg viewBox="0 0 180 50" width="100%">
+                        <path id="wv" d="" fill="none" stroke="#ff7a1a" stroke-width="2" />
+                    </svg><span class="m">1 kHz · GPIO27</span></div>
+                <div class="card k"><small>Pemanas</small><b id="xh">-</b><svg viewBox="0 0 120 30" width="100%">
+                        <path id="coil" d="M5 15q6-12 12 0t12 0t12 0t12 0t12 0t12 0t12 0t12 0t12 0" fill="none"
+                            stroke="#ff7a1a" stroke-width="3" />
+                    </svg><span class="m">Maksimum 40 W</span></div>
+                <div class="card k"><small>ADC 12 bit · GPIO33</small>
+                    <table style="font-size:12px">
+                        <tr>
+                            <td class="m">Nilai</td>
+                            <td id="xa1">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Tegangan</td>
+                            <td id="xa2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Suhu terbaca</td>
+                            <td id="xa3">-</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card k"><small>DAC 8 bit · GPIO26</small>
+                    <table style="font-size:12px">
+                        <tr>
+                            <td class="m">Nilai</td>
+                            <td id="xd1">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Hex</td>
+                            <td id="xd2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="m">Tegangan</td>
+                            <td id="xd3">-</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card k"><small>Ruang telur (waktu nyata)</small><b id="xr">-</b>
+                    <div class="bar"><i id="xb"></i></div><span class="m" id="xdr">Pintu tertutup</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Jalur loopback</h3><span class="m">Suhu ruang telur dibuat jadi tegangan oleh DAC (66 mV per °C, 0
+                    sampai 50 °C), masuk ke pin ADC lewat jumper GPIO26 ke GPIO33. Hasil bacaan ADC kembali ke PID
+                    sebagai umpan balik.</span>
+            </div>
+            <div class="card">
+                <h3>Uji coba</h3><span class="m">Ubah PWM sendiri, lihat suhu mengikuti.</span>
+                <div class="row"><button data-m="AI_AUTO">AI otomatis</button><button data-m="PID_MANUAL">PID
+                        manual</button><button data-m="PWM_MANUAL">PWM manual</button><button
+                        id="simb">Simulasi</button></div>
+                <div class="row">
+                    <div style="flex:1;min-width:200px"><span class="m">PWM manual <b id="pv2"></b></span><input
+                            type="range" id="pw2" min="0" max="100"></div>
+                    <div style="flex:1;min-width:200px"><span class="m">Suhu ruangan <b id="ambv"></b></span><input
+                            type="range" id="amb" min="15" max="35" step="0.5"></div>
+                </div>
+                <div class="row"><button id="dr">Buka pintu 20 detik</button><button id="cl">Dinginkan alat</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Sinyal loop</h3><span class="m">PWM naik, suhu naik. PWM turun, suhu turun.</span>
+                <div class="m">Suhu (°C)</div><canvas id="s1"></canvas>
+                <div class="m">PWM (%)</div><canvas id="s2" style="height:90px"></canvas>
+                <div class="m">Kode DAC (×16) dan ADC, 0 sampai 4095</div><canvas id="s3" style="height:110px"></canvas>
+            </div>
+        </section>
+    </main>
+    <script>
+        const $ = id => document.getElementById(id), T = (id, v) => { const e = $(id); if (e) e.textContent = v };
+        const MAXN = 300, TP = [[0, 37.8], [7, 37.8], [18, 37.5], [19, 37.2], [21, 37]], HP = [[0, 55], [18, 52], [18.3, 67], [21, 70]];
+        const ML = { AI_AUTO: 'AI otomatis', PID_MANUAL: 'PID manual', PWM_MANUAL: 'PWM manual' };
+        const PG = { dashboard: ['Dashboard', 'Pantau suhu, hari inkubasi, dan kerja pemanas secara langsung.'], suhu: ['Setting Suhu', 'Atur mode kontrol, target suhu, PWM manual, parameter PID, dan batas alarm.'], ai: ['AI Suhu Telur', 'Target suhu dan kelembapan otomatis mengikuti umur telur, hari ke-1 sampai ke-21.'], simulasi: ['Simulasi PWM, DAC, ADC', 'Keluaran DAC dikembalikan langsung ke ADC sebagai umpan balik. PWM tinggi memanaskan, PWM rendah mendinginkan.'] };
+        let H = [], st = {}, inited = false, busy = false, EV = [], prev = {}, tm = null;
+        async function api(p) { const r = await fetch(p, { cache: 'no-store' }); return r.json() }
+        function ip(p, x) { for (let i = 1; i < p.length; i++)if (x <= p[i][0]) return p[i - 1][1] + (p[i][1] - p[i - 1][1]) * (x - p[i - 1][0]) / (p[i][0] - p[i - 1][0]); return p[p.length - 1][1] }
+        function egg(d) {
+            let g = '<path d="M50 8C28 8 14 50 14 76c0 24 16 38 36 38s36-14 36-38C86 50 72 8 50 8z" fill="#f3dcb4" stroke="#ffcf8a" stroke-width="2"/>';
+            if (d < 7) g += '<circle cx="50" cy="78" r="4" fill="#e8a33d"/>';
+            else if (d < 19) g += '<circle cx="50" cy="78" r="' + (7 + (d - 7) * 1.3) + '" fill="#e0524d" opacity=".75"/><path d="M50 78l-18-14M50 78l20-10M50 78l-14 20" stroke="#c0392b" stroke-width="1.5"/>';
+            else if (d < 21) g += '<circle cx="50" cy="82" r="24" fill="#ffd23f"/><path d="M24 60l12 10-8 6 10 8 8-10 8 8 8-10 10 8" stroke="#8a5a1a" fill="none" stroke-width="2"/>';
+            else g += '<circle cx="50" cy="76" r="26" fill="#ffd23f"/><circle cx="41" cy="70" r="3" fill="#222"/><circle cx="59" cy="70" r="3" fill="#222"/><path d="M45 80h10l-5 8z" fill="#ff8a3d"/>';
+            return '<svg viewBox="0 0 100 120">' + g + '</svg>'
+        }
+        function plot(id, S, xmax, lo, hi, vx) {
+            const cv = $(id); if (!cv || !cv.clientWidth) return; const dpr = devicePixelRatio || 1, W = cv.clientWidth, Hh = cv.clientHeight; cv.width = W * dpr; cv.height = Hh * dpr; const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); const L = 40, T0 = 6, w = W - L - 8, h = Hh - T0 - 6; const X = x => L + x / xmax * w, Y = y => T0 + h - (y - lo) / (hi - lo) * h; c.font = '11px system-ui'; c.textAlign = 'right';
+            for (let k = 0; k <= 3; k++) { const v = lo + (hi - lo) * k / 3; c.strokeStyle = 'rgba(255,255,255,.07)'; c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(L + w, Y(v)); c.stroke(); c.fillStyle = '#8f98b3'; c.fillText(v.toFixed(hi - lo < 6 ? 1 : 0), L - 5, Y(v) + 4) }
+            S.forEach(s => { if (s.p.length < 2) return; c.beginPath(); s.p.forEach((q, i) => i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1]))); c.setLineDash(s.d || []); c.strokeStyle = s.c; c.lineWidth = 2; c.stroke(); c.setLineDash([]); if (s.f) { c.lineTo(X(s.p[s.p.length - 1][0]), Y(lo)); c.lineTo(X(s.p[0][0]), Y(lo)); c.fillStyle = s.c + '30'; c.fill() } });
+            if (vx != null) { c.setLineDash([4, 4]); c.strokeStyle = '#ff7a1a'; c.beginPath(); c.moveTo(X(vx), T0); c.lineTo(X(vx), T0 + h); c.stroke(); c.setLineDash([]) }
+        }
+        const L1 = (k, c, d, f) => ({ p: H.map((q, i) => [i, q[k]]), c, d, f });
+        function draw() {
+            if (!H.length) return; const lo = Math.min(...H.map(q => Math.min(q.temp, q.sp))) - .3, hi = Math.max(...H.map(q => Math.max(q.temp, q.sp))) + .3;
+            for (const [a, b, c] of [['c1c', 'c2c'], ['s1', 's2', 's3']]) { }
+            plot('c1c', [L1('sp', '#ff7a1a', [6, 4]), L1('temp', '#4da3ff')], MAXN - 1, lo, hi); plot('c2c', [L1('pwm', '#ff4d6d', 0, 1)], MAXN - 1, 0, 100);
+            plot('s1', [L1('sp', '#ff7a1a', [6, 4]), L1('temp', '#4da3ff')], MAXN - 1, lo, hi); plot('s2', [L1('pwm', '#ff4d6d', 0, 1)], MAXN - 1, 0, 100);
+            plot('s3', [L1('dac', '#ff7a1a'), L1('adc', '#4da3ff')], MAXN - 1, 0, 4095);
+            const d = Math.min(21, (st.elapsed || 0) / (st.day_s || 86400));
+            plot('a1', [{ p: TP, c: '#ff7a1a' }], 21, 36.5, 38, d); plot('a2', [{ p: HP, c: '#4da3ff', f: 1 }], 21, 50, 80, d)
+        }
+        function ev(s, x) { EV.unshift([s, x]); if (EV.length > 8) EV.pop(); $('lg').innerHTML = EV.map(e => '<tr><td class="m">' + e[0] + '</td><td style="text-align:left;font-weight:400">' + e[1] + '</td></tr>').join('') }
+        function route() { const h = (location.hash || '#dashboard').slice(1), p = PG[h] ? h : 'dashboard'; document.querySelectorAll('.page').forEach(e => e.classList.toggle('on', e.id === p)); document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + p)); T('ttl', PG[p][0]); T('sub', PG[p][1]); draw() }
+        addEventListener('hashchange', route); addEventListener('resize', draw);
+        function update(s) {
+            st = s; const d = Math.min(21, s.elapsed / s.day_s), inc = s.elapsed / s.day_s * 86400, dd = Math.floor(inc / 86400), hh = Math.floor(inc % 86400 / 3600), rem = 21 * 86400 - inc;
+            const hhmm = String(hh).padStart(2, '0') + ':' + String(Math.floor(inc % 3600 / 60)).padStart(2, '0'), f = (v, n) => v.toFixed(n), ds = f(s.temp - s.setpoint, 2);
+            const chg = (k, m) => { if (prev[k] !== undefined && prev[k] !== s[k]) ev('Hari ' + s.day + ' · ' + hhmm, m); prev[k] = s[k] };
+            chg('mode', 'Mode kontrol: ' + ML[s.mode]); chg('day', 'Masuk hari ke-' + s.day + ', target ' + f(s.setpoint, 1) + ' °C'); chg('alarm', 'Status: ' + s.alarm); chg('door', s.door ? 'Pintu dibuka' : 'Pintu ditutup'); chg('sim', s.sim ? 'Simulasi dinyalakan' : 'Simulasi dimatikan'); chg('pause', s.pause ? 'Waktu inkubasi dijeda' : 'Waktu inkubasi dilanjutkan');
+            const gj = new Date().getHours(); T('gr', 'Selamat ' + (gj < 11 ? 'pagi' : gj < 15 ? 'siang' : gj < 18 ? 'sore' : 'malam'));
+            T('ip', s.ip); T('sn', s.day_s == 86400 ? 'Waktu nyata: 1 hari = 24 jam.' : 'Waktu inkubasi dipercepat agar 21 hari bisa dilihat dalam hitungan menit.');
+            T('c1', '🌡 ' + f(s.temp, 1) + ' °C'); T('c2', '⚡ ' + f(s.watt, 1) + ' W'); T('c3', '● ' + s.alarm);
+            T('dn', s.day); T('fz', s.fase); $('arc').setAttribute('stroke-dasharray', (d / 21 * 552.9) + ' 553');
+            T('in1', dd + ' hari ' + hh + ' jam'); T('in2', Math.floor(rem / 86400) + ' hari ' + Math.floor(rem % 86400 / 3600) + ' jam lagi');
+            const nx = [8, 12, 16, 20].find(x => x > hh); T('h1', f(s.setpoint, 1) + ' °C'); T('h2', s.hum + ' %'); T('h3', s.day > 18 ? 'Berhenti (hari 19-21)' : '4 kali, berikutnya ' + String(nx || 8).padStart(2, '0') + ':00');
+            T('h4', s.day == 1 ? 'Telur dimasukkan' : [7, 14, 18].includes(s.day) ? 'Candling (peneropongan)' : s.day >= 21 ? 'Menetas' : s.day > 18 ? 'Jangan buka pintu' : 'Embrio berkembang');
+            T('vt', f(s.temp, 2) + ' °C'); T('vt2', (ds >= 0 ? '+' : '') + ds + ' °C dari target'); T('vs', f(s.setpoint, 2) + ' °C'); T('vs2', s.mode == 'AI_AUTO' ? 'Profil AI hari ke-' + s.day : 'Target manual'); T('vp', f(s.pwm, 0) + ' %'); $('pb').style.width = s.pwm + '%'; T('vp2', 'Daya pemanas ' + f(s.pwm, 0) + ' / 100'); T('vh', s.hum + ' %');
+            const b = $('bd'); b.textContent = s.alarm == 'normal' ? 'Normal' : s.alarm; b.style.background = s.alarm == 'normal' ? 'rgba(46,204,154,.18)' : 'rgba(255,77,109,.22)'; b.style.color = s.alarm == 'normal' ? '#2ecc9a' : '#ff4d6d';
+            put('eg1', scene(d, false)); put('eg2', scene(d, false)); renderHV(d); $('hgl').style.opacity = s.pwm / 100; $('coil').style.filter = 'drop-shadow(0 0 ' + (s.pwm / 12) + 'px #ff7a1a)';
+            T('ad', 'Hari ke-' + s.day); T('at', f(s.setpoint, 2) + ' °C'); T('ah2', s.hum + ' %'); T('ae', '+' + f(s.emb, 2) + ' °C'); T('af', f(s.ff, 1) + ' %'); T('ak', f(s.kf, 2) + 'x'); T('adr', s.door ? 'Terbuka' : 'Tertutup');
+            T('ab', s.mode == 'AI_AUTO' ? 'AI sedang mengontrol' : 'AI tidak aktif');
+            T('x1', f(s.setpoint, 2) + ' °C'); T('x1b', s.mode == 'AI_AUTO' ? 'Profil AI hari ke-' + s.day : 'Target manual'); T('xe', f(s.setpoint - s.temp, 2) + ' °C'); T('xp', f(s.p, 1) + ' / ' + f(s.i, 1) + ' / ' + f(s.d, 1) + ' %'); T('xo', f(s.pwm, 1) + ' %'); T('xw', f(s.pwm, 1) + ' %');
+            const w = s.pwm / 100 * 60; let wd = 'M0 45'; for (let i = 0; i < 3; i++) { const x = i * 60; wd += 'L' + x + ' 45L' + x + ' 8L' + (x + w) + ' 8L' + (x + w) + ' 45L' + (x + 60) + ' 45' } $('wv').setAttribute('d', wd);
+            T('xh', f(s.watt, 1) + ' W'); T('xa1', s.adc_raw); T('xa2', f(s.adc_v, 4) + ' V'); T('xa3', f(s.temp, 2) + ' °C'); T('xd1', s.dac_raw); T('xd2', '0x' + s.dac_raw.toString(16).toUpperCase().padStart(2, '0')); T('xd3', f(s.dac_raw * 3.3 / 255, 4) + ' V');
+            T('xr', f(s.temp, 2) + ' °C'); $('xb').style.width = Math.max(0, Math.min(100, (s.temp - 20) / 25 * 100)) + '%'; T('xdr', s.door ? 'Pintu terbuka' : 'Pintu tertutup');
+            document.querySelectorAll('[data-m]').forEach(e => e.classList.toggle('on', e.dataset.m === s.mode));
+            T('pz', s.pause ? 'Lanjut' : 'Jeda'); $('simb').className = s.sim ? 'on' : ''; $('simb').textContent = s.sim ? 'Simulasi: ON' : 'Simulasi: OFF (sensor asli)';
+            if (document.activeElement !== $('jmp')) $('jmp').value = s.day; $('spd').value = s.day_s;
+            if (!inited) { for (const k of ['sp', 'kp', 'ki', 'kd', 'al', 'ah', 'pr']) $(k).value = s[k]; $('pw').value = $('pw2').value = s.pwm_set; $('amb').value = s.amb; inited = true }
+            T('pwv', $('pw').value + '%'); T('pv2', $('pw2').value + '%'); T('ambv', $('amb').value + ' °C');
+            H.push({ sp: s.setpoint, temp: s.temp, pwm: s.pwm, dac: s.dac_raw * 16, adc: s.adc_raw }); if (H.length > MAXN) H.shift(); draw()
+        }
+        function push() { clearTimeout(tm); tm = setTimeout(() => { const g = k => $(k).value; api('/api/cfg?sp=' + g('sp') + '&pwm=' + g('pw') + '&kp=' + g('kp') + '&ki=' + g('ki') + '&kd=' + g('kd') + '&amb=' + g('amb') + '&al=' + g('al') + '&ah=' + g('ah') + '&pr=' + g('pr')).then(update) }, 400) }
+        for (const k of ['sp', 'kp', 'ki', 'kd', 'al', 'ah', 'pr', 'pw', 'amb']) $(k).oninput = push;
+        $('pw2').oninput = () => { $('pw').value = $('pw2').value; push() }; $('pw').addEventListener('input', () => $('pw2').value = $('pw').value);
+        $('smn').onclick = () => { $('sp').value = (+$('sp').value - .1).toFixed(1); push() }; $('spl').onclick = () => { $('sp').value = (+$('sp').value + .1).toFixed(1); push() };
+        document.querySelectorAll('.pre').forEach(b => b.onclick = () => { $('sp').value = b.dataset.v; push() });
+        $('rst').onclick = () => { $('kp').value = 18; $('ki').value = .18; $('kd').value = 20; push() };
+        document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => api('/api/cfg?mode=' + b.dataset.m).then(update));
+        $('spd').onchange = () => api('/api/sim?day_s=' + $('spd').value).then(update); $('pz').onclick = () => api('/api/pause').then(update);
+        $('jmp').onchange = () => api('/api/jump?day=' + $('jmp').value).then(update); $('nb').onclick = () => api('/api/batch').then(update);
+        $('simb').onclick = () => api('/api/sim?on=' + (st.sim ? 0 : 1)).then(update); $('dr').onclick = () => api('/api/door').then(update); $('cl').onclick = () => api('/api/cool').then(update);
+        let PV = null, CD = false, RD = 0, lk = '';
+        function emb(d) {
+            const r = Math.min(30, 5 + d * 1.7), n = Math.min(7, Math.floor(d / 1.5) + 1); let s = '';
+            for (let i = 0; i < n; i++) { const a = i / n * 6.283 + d * .1; s += '<path d="M100 134L' + (100 + (r + 14) * Math.cos(a)) + ' ' + (134 + (r + 14) * Math.sin(a) * .8) + '" stroke="#c0392b" stroke-width="1.4" opacity=".7"/>' }
+            s += '<circle cx="100" cy="134" r="' + r + '" fill="' + (d > 14 ? '#e8a33d' : '#e0524d') + '" opacity=".9"/>';
+            if (d >= 4) s += '<circle cx="' + (100 - r * .35) + '" cy="' + (134 - r * .2) + '" r="' + Math.min(4, 1 + d * .25) + '" fill="#2a1010"/>';
+            if (d >= 15) s += '<path d="M' + (100 - r * .7) + ' ' + (134 + r * .1) + 'l-7 3 7 3z" fill="#ff8a3d"/>';
+            return s
+        }
+        function scene(d, cd) {
+            const E = 'M100 28C68 28 48 84 48 128c0 36 24 62 52 62s52-26 52-62C152 84 132 28 100 28z', S = 'M48 142L62 130L74 144L88 128L100 144L114 128L128 144L140 130L152 142';
+            let g = '<ellipse cx="100" cy="196" rx="64" ry="10" fill="rgba(0,0,0,.35)"/><path d="M42 192q58 18 116 0M50 200q50 10 100 0" stroke="#c9a14a" stroke-width="3" fill="none"/>';
+            if (d < 20) {
+                const cr = Math.max(0, Math.min(1, (d - 18) / 2));
+                g += '<path d="' + E + '" fill="url(#' + (cd ? 'cdl' : 'shl') + ')" stroke="#ffcf8a" stroke-width="2"/>';
+                if (cd) g += emb(d);
+                if (cr > 0) g += '<path d="M92 60l9 12-10 10 12 14-10 12 10 14" pathLength="100" stroke-dasharray="100" stroke-dashoffset="' + (1 - cr) * 100 + '" stroke="#6b4a1c" stroke-width="2.5" fill="none"/>';
+                if (d >= 19) g += '<path d="M94 74l6-9 6 9z" fill="#ff8a3d" opacity="' + Math.min(1, d - 19) + '"/>'
+            }
+            else {
+                const p = Math.min(1, d - 20), y = (1 - p) * 46;
+                g += '<g class="' + (p >= 1 ? 'bob' : '') + '"><g transform="translate(0 ' + y + ')"><circle cx="100" cy="152" r="34" fill="#ffd23f"/><circle cx="100" cy="110" r="25" fill="#ffd23f"/><path d="M100 86q-5-12 3-15M100 86q3-13 11-10" stroke="#f2b91f" stroke-width="3" fill="none" stroke-linecap="round"/><g class="bl"><circle cx="89" cy="106" r="3.6" fill="#222"/><circle cx="111" cy="106" r="3.6" fill="#222"/></g><circle cx="90.3" cy="104.8" r="1.2" fill="#fff"/><circle cx="112.3" cy="104.8" r="1.2" fill="#fff"/><circle cx="82" cy="116" r="4" fill="#ff9aa2" opacity=".6"/><circle cx="118" cy="116" r="4" fill="#ff9aa2" opacity=".6"/><path d="M94 114l6 10 6-10z" fill="#ff8a3d"/></g></g>';
+                g += '<path transform="translate(' + (-p * 46) + ' ' + (-p * 34) + ') rotate(' + (-p * 40) + ' 70 80)" d="' + S + 'C152 100 132 28 100 28C68 28 48 100 48 142Z" fill="#f3dcb4" stroke="#ffcf8a" stroke-width="2"/>';
+                g += '<path d="' + S + 'C152 170 128 192 100 192C72 192 48 170 48 142Z" fill="#f3dcb4" stroke="#ffcf8a" stroke-width="2"/>';
+                if (p >= .8) g += '<text class="tw" x="38" y="62" font-size="16">✨</text><text class="tw" x="150" y="84" font-size="14">✨</text>'
+            }
+            return '<svg viewBox="0 0 200 220">' + g + '</svg>'
+        }
+        function stg(d) { return d < 1 ? ['Telur baru masuk', 'Cakram benih mulai membelah.'] : d < 7 ? ['Pembentukan embrio', 'Jantung mulai berdetak, pembuluh darah terbentuk.'] : d < 14 ? ['Embrio tumbuh', 'Paruh, kaki, dan bulu halus mulai terbentuk.'] : d < 18 ? ['Menjelang tetas', 'Embrio memenuhi telur dan bersiap berputar posisi.'] : d < 20 ? ['Mulai retak (pipping)', 'Anak ayam mengetuk cangkang dari dalam.'] : d < 21 ? ['Menetas!', 'Cangkang terbuka, kepala mulai keluar.'] : ['Anak ayam lahir 🐣', 'Biarkan kering sekitar 12 jam sebelum dipindah.'] }
+        function put(id, h) { const e = $(id); if (e.dataset.k !== h) { e.dataset.k = h; e.innerHTML = h } }
+        function renderHV(real) {
+            RD = real; const d = PV === null ? real : PV, k = d.toFixed(2) + CD;
+            if (k !== lk) { lk = k; $('hv').innerHTML = scene(d, CD); const s = stg(d); T('sg1', s[0]); T('sg2', s[1]) }
+            $('hv').classList.toggle('rock', d >= 18 && d < 20);
+            T('sg3', (PV === null ? 'Sekarang · ' : 'Pratinjau · ') + 'hari ke-' + Math.min(21, Math.floor(d) + 1));
+            if (PV === null && document.activeElement !== $('pvd')) $('pvd').value = real;
+            $('pvb').style.display = PV === null ? 'none' : '';
+            document.querySelectorAll('#tl button').forEach((b, i) => { b.className = ([7, 14, 18].includes(i + 1) ? 'c ' : '') + (i <= Math.floor(real) ? 'on ' : '') + (PV !== null && i + 1 === Math.min(21, Math.floor(PV) + 1) ? 'sel' : '') })
+        }
+        for (let i = 1; i <= 21; i++) { const b = document.createElement('button'); b.textContent = i; b.onclick = () => { PV = i == 21 ? 21 : i - .01; renderHV(RD) }; $('tl').appendChild(b) }
+        $('pvd').oninput = () => { PV = +$('pvd').value; renderHV(RD) };
+        $('pvb').onclick = () => { PV = null; renderHV(RD) };
+        $('cdl').onclick = () => { CD = !CD; $('cdl').classList.toggle('on', CD); renderHV(RD) };
+        $('hv').onclick = () => {
+            const h = $('hv'), d = PV === null ? RD : PV; h.classList.remove('wig'); void h.offsetWidth; h.classList.add('wig');
+            T('bub', d >= 19 ? 'Cuit cuit! 🐥' : 'Tok tok 🥚'); $('bub').style.opacity = 1; setTimeout(() => $('bub').style.opacity = 0, 1000)
+        };
+        async function poll() { if (busy) return; busy = true; try { update(await api('/api/state')) } catch (e) { T('ip', 'terputus...') } busy = false }
+        (async () => {
+            let t = ''; for (let i = 0; i < 21; i++) { const a = i / 21 * 6.2832 - 1.5708; t += '<line x1="' + (110 + 100 * Math.cos(a)) + '" y1="' + (110 + 100 * Math.sin(a)) + '" x2="' + (110 + 106 * Math.cos(a)) + '" y2="' + (110 + 106 * Math.sin(a)) + '" stroke="#8f98b3"/>' } $('tk').innerHTML = t;
+            try { const h = await api('/api/hist'); h.t.forEach((x, i) => H.push({ sp: h.sp[i], temp: h.temp[i], pwm: h.pwm[i], dac: 0, adc: 0 })) } catch (e) { }
+            route(); await poll(); setInterval(poll, 1000)
+        })();
+    </script>
+</body>
+
+</html>
