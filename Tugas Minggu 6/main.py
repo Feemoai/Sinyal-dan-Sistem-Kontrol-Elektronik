@@ -7,7 +7,7 @@ from machine import Pin, PWM, ADC, DAC
 from array import array
 
 # isi WiFi yang mau dipakai, dicoba berurutan (harus 2.4 GHz)
-WIFI_LIST = [("vivoY35", "FERY2006"), ("WiFi Gedung Terpadu", "")]
+WIFI_LIST = [("WiFi_1", "pass_WiFi_1"), ("WiFi_2", "pass_WiFi_2")]
 HOST = "penetas-telur"
 
 TS_MS = 1000
